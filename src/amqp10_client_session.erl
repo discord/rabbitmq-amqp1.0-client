@@ -638,6 +638,10 @@ make_source(#{role := {receiver, #{address := Address} = Target, _Pid}}) ->
     #'v1_0.source'{address = {utf8, Address},
                    durable = {uint, Durable}}.
 
+make_target(#{role := {receiver, #{target_address := Address} = Target, _Pid}}) ->
+    Durable = translate_terminus_durability(maps:get(durable, Target, none)),
+    #'v1_0.target'{address = {utf8, Address},
+                   durable = {uint, Durable}};
 make_target(#{role := {receiver, _Source, _Pid}}) ->
     #'v1_0.target'{};
 make_target(#{role := {sender, #{address := Address} = Target}}) ->
