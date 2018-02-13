@@ -237,6 +237,9 @@ footer(#amqp10_msg{footer = #'v1_0.footer'{content = Footer}}) ->
     [binary()] | [#'v1_0.amqp_sequence'{}] | #'v1_0.amqp_value'{}.
 body(#amqp10_msg{body = [#'v1_0.data'{} | _] = Data}) ->
     [Content || #'v1_0.data'{content = Content} <- Data];
+body(#amqp10_msg{body = #'v1_0.amqp_value'{content = MAs}}) ->
+    lists:foldl(fun({K, V}, Acc) -> Acc#{unpack(K) => unpack(V)} end,
+                #{}, MAs);
 body(#amqp10_msg{body = Body}) -> Body.
 
 
