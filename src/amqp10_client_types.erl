@@ -69,7 +69,8 @@
 
 
 unpack(undefined) -> undefined;
-unpack({_, Value}) -> Value;
+unpack({_, Value}) -> unpack(Value);
+unpack(Values) when is_list(Values) -> [unpack(Value) || Value <- Values];
 unpack(Value) -> Value.
 
 utf8(S) when is_list(S) -> {utf8, list_to_binary(S)};
