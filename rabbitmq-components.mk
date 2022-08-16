@@ -196,26 +196,26 @@ current_rmq_ref := $(shell (\
 	ref=$$(LANG=C git branch --list | awk '/^\* \(.*detached / {ref=$$0; sub(/.*detached [^ ]+ /, "", ref); sub(/\)$$/, "", ref); print ref; exit;} /^\* / {ref=$$0; sub(/^\* /, "", ref); print ref; exit}');\
 	if test "$$(git rev-parse --short HEAD)" != "$$ref"; then echo "$$ref"; fi))
 else
-current_rmq_ref := master
+current_rmq_ref := main
 endif
 endif
 export current_rmq_ref
 
 ifeq ($(origin base_rmq_ref),undefined)
 ifneq ($(wildcard .git),)
-possible_base_rmq_ref := master
+possible_base_rmq_ref := main
 ifeq ($(possible_base_rmq_ref),$(current_rmq_ref))
 base_rmq_ref := $(current_rmq_ref)
 else
 base_rmq_ref := $(shell \
-	(git rev-parse --verify -q master >/dev/null && \
+	(git rev-parse --verify -q main >/dev/null && \
 	 git rev-parse --verify -q $(possible_base_rmq_ref) >/dev/null && \
-	 git merge-base --is-ancestor $$(git merge-base master HEAD) $(possible_base_rmq_ref) && \
+	 git merge-base --is-ancestor $$(git merge-base main HEAD) $(possible_base_rmq_ref) && \
 	 echo $(possible_base_rmq_ref)) || \
-	echo master)
+	echo main)
 endif
 else
-base_rmq_ref := master
+base_rmq_ref := main
 endif
 endif
 export base_rmq_ref
