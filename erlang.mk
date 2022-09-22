@@ -4300,6 +4300,12 @@ define dep_autopatch_erlang_mk
 endef
 endif
 
+define dep_autopatch_lager_erlang_deps
+	if [ -f $(DEPS_DIR)/$(1)/mk/rabbitmq-components.mk ]; then \
+		sed -i.bak 's~dep_lager = hex 3.8.0~dep_lager = hex 3.9.2~' $(DEPS_DIR)/$(1)/mk/rabbitmq-components.mk; \
+	fi
+endef
+
 define dep_autopatch_gen
 	printf "%s\n" \
 		"ERLC_OPTS = +debug_info" \
@@ -4685,6 +4691,7 @@ $(DEPS_DIR)/$(call dep_name,$1):
 		echo " CONF  " $(DEP_STR); \
 		cd $(DEPS_DIR)/$(DEP_NAME) && ./configure; \
 	fi
+	$(call dep_autopatch_lager_erlang_deps,$(DEP_NAME))
 ifeq ($(filter $(1),$(NO_AUTOPATCH)),)
 	$(verbose) if [ "$(1)" = "amqp_client" -a "$(RABBITMQ_CLIENT_PATCH)" ]; then \
 		if [ ! -d $(DEPS_DIR)/rabbitmq-codegen ]; then \
